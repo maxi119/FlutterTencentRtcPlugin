@@ -56,7 +56,7 @@ tencent_rtc_plugin: ^[最新版本号]
 |  ----  | ----  | ----  | ----  | ----  |
 | showDebugView  | 启用Debug视图【注意：目前版本IOS暂不支持】 | {mode:'模式,0,1,2'} | √ | -
 | setConsoleEnabled  | 启用日志打印 | {enabled:'是否启用'} | √ | √
-| enterRoom  | 进入房间 | {appid:'应用appid',userId:'用户ID',userSig:'用户签名',roomId:'房间号',scene:'应用场景',role:'角色'} | √ | √
+| enterRoom  | 进入房间 | {appid:'应用appid',userId:'用户ID',userSig:'用户签名',roomId:'房间号',scene:'应用场景',role:'角色',privateMapKey:'房间签名'} | √ | √
 | exitRoom  | 退出房间 | - | √ | √
 | switchRole  | 切换角色 | {role:'角色'} | √ | √
 | setDefaultStreamRecvMode  | 设置音视频数据接收模式（需要在进房前设置才能生效）。 | {autoRecvAudio:'自动接收音频数据',autoRecvVideo:'自动接收视频数据'} | √ | √
@@ -125,6 +125,8 @@ TencentRtcVideoView(
 |  ----  | ----  | ----  | ----  | ----  |
 | startRemoteView  | 开启远程显示 | {userId:'用户ID'} | √ | √
 | stopRemoteView  | 停止远程显示 | {userId:'用户ID'} | √ | √
+| startRemoteSubStreamView  | 开启远程辅流显示 | {userId:'用户ID'} | √ | √
+| stopRemoteSubStreamView  | 停止远程辅流显示 | {userId:'用户ID'} | √ | √
 | startLocalPreview  | 开启本地视频采集 | {frontCamera:'是否前置摄像头'} | √ | √
 | stopLocalPreview  | 停止本地视频采集 | - | √ | √
 
@@ -134,3 +136,40 @@ TencentRtcVideoView(
 例如进入房间只需要调用``TencentRtcPlugin.enterRoom()``即可，腾讯API文档地址:[https://cloud.tencent.com/document/product/647/32264](https://cloud.tencent.com/document/product/647/32264)  
 <img src="https://raw.githubusercontent.com/JiangJuHong/access-images/master/FlutterTencentRtcPlugin/1.png" height="300em" style="max-width:100%;display: inline-block;"/>
 <img src="https://raw.githubusercontent.com/JiangJuHong/access-images/master/FlutterTencentRtcPlugin/2.png" height="300em" style="max-width:100%;display: inline-block;"/>
+
+## 配置环境变量
+
+1. 使用`flutter run --dart-define=USER_ID=userid`
+2. 使用`vscode`debug配置，新建`.vscode/launch.json`:
+```
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Flutter",
+            "request": "launch",
+            "type": "dart",
+            "program": "${workspaceFolder}/example/lib/main.dart",
+            "args": [
+                "--dart-define=APP_ID=1234",
+                "--dart-define=USER_ID=1234",
+                "--dart-define=USER_SIG=asdf",
+            ]
+        }
+    ]
+}
+```
+
+## 其它插件
+````
+我同时维护的还有以下插件，如果您感兴趣与我一起进行维护，请通过Github联系我，欢迎 issues 和 PR。
+````
+| 平台 | 插件  |  描述  |  版本  |
+| ---- | ----  | ---- |  ---- | 
+| Flutter | [FlutterTencentImPlugin](https://github.com/JiangJuHong/FlutterTencentImPlugin)  | 腾讯云IM插件 | [![pub package](https://img.shields.io/pub/v/tencent_im_plugin.svg)](https://pub.dartlang.org/packages/tencent_im_plugin) | 
+| Flutter | [FlutterTencentRtcPlugin](https://github.com/JiangJuHong/FlutterTencentRtcPlugin)  | 腾讯云Rtc插件 | [![pub package](https://img.shields.io/pub/v/tencent_rtc_plugin.svg)](https://pub.dartlang.org/packages/tencent_rtc_plugin) | 
+| Flutter | [FlutterXiaoMiPushPlugin](https://github.com/JiangJuHong/FlutterXiaoMiPushPlugin)  | 小米推送SDK插件 | [![pub package](https://img.shields.io/pub/v/xiao_mi_push_plugin.svg)](https://pub.dartlang.org/packages/xiao_mi_push_plugin) | 
+| Flutter | [FlutterHuaWeiPushPlugin](https://github.com/JiangJuHong/FlutterHuaWeiPushPlugin)  | 华为推送(HMS Push)插件 | [![pub package](https://img.shields.io/pub/v/hua_wei_push_plugin.svg)](https://pub.dartlang.org/packages/hua_wei_push_plugin) | 
+| Flutter | [FlutterTextSpanField](https://github.com/JiangJuHong/FlutterTextSpanField)  | 自定义文本样式输入框 | [![pub package](https://img.shields.io/pub/v/text_span_field.svg)](https://pub.dartlang.org/packages/text_span_field) | 
+| Flutter | [FlutterClipboardListener](https://github.com/JiangJuHong/FlutterClipboardListener)  | 粘贴板监听器 | [![pub package](https://img.shields.io/pub/v/clipboard_listener.svg)](https://pub.dartlang.org/packages/clipboard_listener) | 
+| Flutter | [FlutterQiniucloudLivePlugin](https://github.com/JiangJuHong/FlutterQiniucloudLivePlugin)  | Flutter 七牛云直播云插件 | 暂未发布，通过 git 集成 | 
