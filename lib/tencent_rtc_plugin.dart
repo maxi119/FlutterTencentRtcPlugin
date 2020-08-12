@@ -13,6 +13,11 @@ class TencentRtcPlugin {
   /// 监听器对象
   static TencentRtcPluginListener listener;
 
+  /// 載入程式庫，分開載入，避免 android 模擬器無法啟動
+  static Future<bool> init() async {
+    return _channel.invokeMethod('init');
+  }
+
   /// 添加消息监听
   static void addListener(ListenerValue func) {
     if (listener == null) {
@@ -191,7 +196,8 @@ class TencentRtcPlugin {
 
   /// 设置本地图像的顺时针旋转角度。
   static Future<void> setLocalViewRotation({
-    @required int rotation, // rotation 支持 TRTC_VIDEO_ROTATION_90、TRTC_VIDEO_ROTATION_180、TRTC_VIDEO_ROTATION_270 旋转角度，默认值：TRTC_VIDEO_ROTATION_0。。
+    @required
+        int rotation, // rotation 支持 TRTC_VIDEO_ROTATION_90、TRTC_VIDEO_ROTATION_180、TRTC_VIDEO_ROTATION_270 旋转角度，默认值：TRTC_VIDEO_ROTATION_0。。
   }) async {
     return _channel.invokeMethod('setLocalViewRotation', {
       "rotation": rotation,
@@ -201,7 +207,8 @@ class TencentRtcPlugin {
   /// 设置远端图像的顺时针旋转角度。
   static Future<void> setRemoteViewRotation({
     @required String userId, // 用户ID
-    @required int rotation, // rotation 支持 TRTC_VIDEO_ROTATION_90、TRTC_VIDEO_ROTATION_180、TRTC_VIDEO_ROTATION_270 旋转角度，默认值：TRTC_VIDEO_ROTATION_0。。
+    @required
+        int rotation, // rotation 支持 TRTC_VIDEO_ROTATION_90、TRTC_VIDEO_ROTATION_180、TRTC_VIDEO_ROTATION_270 旋转角度，默认值：TRTC_VIDEO_ROTATION_0。。
   }) async {
     return _channel.invokeMethod('setRemoteViewRotation', {
       "userId": userId,
@@ -220,7 +227,8 @@ class TencentRtcPlugin {
 
   /// 设置本地摄像头预览画面的镜像模式。
   static Future<void> setLocalViewMirror({
-    @required int mirrorType, // mirrorType TRTC_VIDEO_MIRROR_TYPE_AUTO：SDK 决定镜像方式：前置摄像头镜像，后置摄像头不镜像。 TRTC_VIDEO_MIRROR_TYPE_ENABLE：前置摄像头和后置摄像头都镜像。 TRTC_VIDEO_MIRROR_TYPE_DISABLE：前置摄像头和后置摄像头都不镜像。 默认值：TRTC_VIDEO_MIRROR_TYPE_AUTO。
+    @required
+        int mirrorType, // mirrorType TRTC_VIDEO_MIRROR_TYPE_AUTO：SDK 决定镜像方式：前置摄像头镜像，后置摄像头不镜像。 TRTC_VIDEO_MIRROR_TYPE_ENABLE：前置摄像头和后置摄像头都镜像。 TRTC_VIDEO_MIRROR_TYPE_DISABLE：前置摄像头和后置摄像头都不镜像。 默认值：TRTC_VIDEO_MIRROR_TYPE_AUTO。
   }) async {
     return _channel.invokeMethod('setLocalViewMirror', {
       "mirrorType": mirrorType,
@@ -305,7 +313,8 @@ class TencentRtcPlugin {
 
   /// 启用音量大小提示。
   static Future<void> enableAudioVolumeEvaluation({
-    @required int intervalMs, // 决定了 onUserVoiceVolume 回调的触发间隔，单位为ms，最小间隔为100ms，如果小于等于0则会关闭回调，建议设置为300ms；详细的回调规则请参考 onUserVoiceVolume 的注释说明。
+    @required
+        int intervalMs, // 决定了 onUserVoiceVolume 回调的触发间隔，单位为ms，最小间隔为100ms，如果小于等于0则会关闭回调，建议设置为300ms；详细的回调规则请参考 onUserVoiceVolume 的注释说明。
   }) async {
     return _channel.invokeMethod('enableAudioVolumeEvaluation', {
       "intervalMs": intervalMs,

@@ -29,6 +29,8 @@ public class TencentRtcPlugin implements FlutterPlugin, MethodCallHandler {
      * 腾讯云音视频通信实例
      */
     private TRTCCloud trtcCloud;
+    private FlutterPluginBinding binding;
+    private MethodChannel channel;
 
     public TencentRtcPlugin() {
     }
@@ -37,18 +39,13 @@ public class TencentRtcPlugin implements FlutterPlugin, MethodCallHandler {
         // 禁用日志打印
         TRTCCloud.setConsoleEnabled(false);
 
-        // 初始化实例
-        trtcCloud = TRTCCloud.sharedInstance(context);
-        trtcCloud.setListener(new CustomTRTCCloudListener(channel));
-
-        // 注册View
-        registry.registerViewFactory(TencentRtcVideoPlatformView.SIGN, new TencentRtcVideoPlatformView(context, messenger));
     }
 
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
-        final MethodChannel channel = new MethodChannel(flutterPluginBinding.getFlutterEngine().getDartExecutor(), "tencent_rtc_plugin");
-        channel.setMethodCallHandler(new TencentRtcPlugin(flutterPluginBinding.getBinaryMessenger(), flutterPluginBinding.getApplicationContext(), channel, flutterPluginBinding.getPlatformViewRegistry()));
+        binding = flutterPluginBinding;
+        channel = new MethodChannel(flutterPluginBinding.getFlutterEngine().getDartExecutor(), "tencent_rtc_plugin");
+        channel.setMethodCallHandler( this );
     }
 
     @Override
@@ -75,6 +72,20 @@ public class TencentRtcPlugin implements FlutterPlugin, MethodCallHandler {
     @Override
     public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
         switch (call.method) {
+            case "init":
+                // 初始化实例
+                if( trtcCloud == null ) {
+                    Context context = binding.getApplicationContext();
+                    trtcCloud = TRTCCloud.sharedInstance(context);
+                    trtcCloud.setListener(new CustomTRTCCloudListener(channel));
+                    // 注册View
+                    PlatformViewRegistry registry = binding.getPlatformViewRegistry();
+                    BinaryMessenger messenger = binding.getBinaryMessenger();
+
+                    registry.registerViewFactory(TencentRtcVideoPlatformView.SIGN, new TencentRtcVideoPlatformView(context, messenger));
+                    result.success( true );
+                }
+                break;
             case "setConsoleEnabled":
                 this.setConsoleEnabled(call, result);
                 break;
