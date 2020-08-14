@@ -62,15 +62,21 @@ class TencentRtcPlugin {
     int role, // 角色
     String privateMapKey, // 房间签名 [非必填]
   }) async {
-    return await _channel.invokeMethod('enterRoom', {
+    final params = {
       "appid": appid,
       "userId": userId,
       "userSig": userSig,
       "roomId": roomId,
       "scene": scene,
-      "role": role,
-      "privateMapKey": privateMapKey,
-    });
+    };
+    if (role != null) {
+      params['role'] = role;
+    }
+    if (privateMapKey != null) {
+      params['privateMapKey'] = privateMapKey;
+    }
+
+    return await _channel.invokeMethod('enterRoom', params);
   }
 
   /// 离开房间
@@ -359,8 +365,24 @@ class TencentRtcPlugin {
   }
 
   /// 查询当前摄像头是否支持缩放
-  Future<bool> isCameraZoomSupported() async {
+  static Future<bool> isCameraZoomSupported() async {
     return _channel.invokeMethod('isCameraZoomSupported');
+  }
+
+  /// 发送自定义消息给房间内所有用户
+  void sendCustomCmdMsg({
+    int cmdId,
+    String data,
+    bool reliable,
+    bool ordered,
+  }) {
+    assert(reliable == ordered);
+    _channel.invokeMethod('sendCustomCmdMsg', {
+      'cmdId': cmdId,
+      'data': data,
+      'reliable': reliable,
+      'ordered': ordered,
+    });
   }
 
   /// 设置摄像头缩放因子（焦距）。

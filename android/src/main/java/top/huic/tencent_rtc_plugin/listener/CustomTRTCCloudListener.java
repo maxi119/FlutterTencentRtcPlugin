@@ -348,7 +348,7 @@ public class CustomTRTCCloudListener extends TRTCCloudListener {
         params.put("userId", s);
         params.put("cmdID", i);
         params.put("seq", i1);
-        params.put("message", bytes);
+        params.put("message", bytes.toString() );
         this.invokeListener(CallBackNoticeEnum.RecvCustomCmdMsg, params);
     }
 
