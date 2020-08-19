@@ -25,6 +25,7 @@ enum RoomType {
 
 abstract class TencentRtcEventHandler {
   void onRemoteUserEnterRoom(String userId);
+  void onRemoteUserLeaveRoom(String userId);
   void onSDKError(String msg, int code);
   void onUserAudioAvailable(String userId, bool available);
   void onMicReady();
@@ -50,7 +51,7 @@ class TencentRtcHelper {
   Completer<bool> _compExitRoom;
   Completer<AudioRoute> _compRouteChanged;
   TencentRtcEventHandler _handler;
-  set setEventHandler(TencentRtcEventHandler handler) => _handler = handler;
+  set eventHandler(TencentRtcEventHandler handler) => _handler = handler;
 
   //	0：不显示；1：显示精简版；2：显示全量版，默认为不显示
   void showDebugView({int mode = 0}) {
@@ -127,10 +128,16 @@ class TencentRtcHelper {
     }
     var paramObj = {};
     try {
-      if (param != null) {
+      if (param != null && param is String && param.startsWith('{')) {
         paramObj = jsonDecode(param);
       }
-    } on Exception catch (_) {}
+    } on FormatException catch (e) {
+      print('param error $e');
+    } on Exception catch (e) {
+      print('param error $e');
+    } catch (e) {
+      print('param error $e');
+    }
 
     switch (type) {
       case ListenerTypeEnum.SdkError:
@@ -139,10 +146,22 @@ class TencentRtcHelper {
         _handler?.onSDKError(param['msg'], param['code']);
         break;
       case ListenerTypeEnum.RemoteUserEnterRoom:
+        final String userId = paramObj['userId'];
+        logger.d('remoteUserLeave $userId: ${paramObj["reason"]}');
+        _handler?.onRemoteUserEnterRoom(userId);
         break;
       case ListenerTypeEnum.EnterRoom:
         // TRTCNetwork
-        _compEnterRoom?.complete(param as int); // > 0 ok
+        var ret = 0;
+        if (param is String) {
+          ret = int.parse(param, onError: (_) => -1);
+        } else if (param is int) {
+          ret = param;
+        } else {
+          ret = -1;
+          logger.e('params error $param');
+        }
+        _compEnterRoom?.complete(ret); // > 0 ok
         _compEnterRoom = null;
         break;
       case ListenerTypeEnum.ExitRoom:
@@ -152,7 +171,7 @@ class TencentRtcHelper {
       case ListenerTypeEnum.RemoteUserLeaveRoom:
         final String userId = paramObj['userId'];
         logger.d('remoteUserLeave $userId: ${paramObj["reason"]}');
-        _handler?.onRemoteUserEnterRoom(userId);
+        _handler?.onRemoteUserLeaveRoom(userId);
         break;
       case ListenerTypeEnum.UserAudioAvailable:
         final String userId = paramObj['userId'];
