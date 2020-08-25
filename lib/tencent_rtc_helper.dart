@@ -146,8 +146,8 @@ class TencentRtcHelper {
         _handler?.onSDKError(param['msg'], param['code']);
         break;
       case ListenerTypeEnum.RemoteUserEnterRoom:
-        final String userId = paramObj['userId'];
-        logger.d('remoteUserLeave $userId: ${paramObj["reason"]}');
+        final String userId = param as String;
+        logger.d('remoteUserEnter $userId:');
         _handler?.onRemoteUserEnterRoom(userId);
         break;
       case ListenerTypeEnum.EnterRoom:
